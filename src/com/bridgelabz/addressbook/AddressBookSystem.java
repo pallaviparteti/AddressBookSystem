@@ -1,9 +1,4 @@
-package com.bridgelabz.addressbook;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
+package com.bridgelabz.addressbook; 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -114,6 +109,24 @@ public class AddressBookSystem extends Contacts {
 			}
 		}
 		System.out.println("Contact not found");
+	}
+
+	public void deleteContact(String firstName, String lastName) {
+		int index = -1;
+		for (int i = 0; i < Contacts.size(); i++) {
+			Contacts contact = Contacts.get(i);
+			if (contact.getFirstName().equals(firstName) && contact.getLastName().equals(lastName)) {
+				index = i;
+				break;
+			}
+		}
+
+		if (index >= 0) {
+			Contacts.remove(index);
+			System.out.println("Person deleted successfully.");
+		} else {
+			System.out.println("Person not found.");
+		}
 	}
 
 }
