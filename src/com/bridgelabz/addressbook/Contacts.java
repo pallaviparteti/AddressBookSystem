@@ -1,12 +1,25 @@
 package com.bridgelabz.addressbook;
 
+import java.util.Comparator;
+import java.util.Objects;
+
+
 public class Contacts {
+	// Method to compare two Contacts objects by their first name
+	public static Comparator<Contacts> FirstNameComparator = new Comparator<Contacts>() {
+		public int compare(Contacts c1, Contacts c2) {
+			String firstName1 = c1.getFirstName().toUpperCase();
+			String firstName2 = c2.getFirstName().toUpperCase();
+
+			// Ascending order
+			return firstName1.compareTo(firstName2);
+		}
+	};
 	private String firstName, lastName, address, city, state, email;
 	private int zip;
 	private long phoneNumber;
 
-	public void Contact(String firstName, String lastName, String address, String city, String state, int zip,
-			long phoneNumber, String email) {
+	public Contacts() {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
@@ -15,12 +28,6 @@ public class Contacts {
 		this.zip = zip;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
-	}
-
-	public void show() {
-		System.out.println(this.firstName + "" + this.lastName + "" + this.address + "" + this.city + "" + this.state
-				+ "" + this.email + "" + this.zip + "" + this.phoneNumber);
-
 	}
 
 	public String getFirstName() {
@@ -84,8 +91,14 @@ public class Contacts {
 	}
 
 	public void setPhoneNumber(long phoneNumber) {
-
 		this.phoneNumber = phoneNumber;
 	}
-}
 
+	@Override
+	public String toString() {
+		return "Contacts Details :" + "\n" + "Firstname :" + firstName + "," + "Lastname :" + lastName + ','
+				+ "Address :" + address + ',' + "City :" + city + ',' + "State :" + state + ',' + "Zip :" + zip + ','
+				+ "PhoneNumber :" + phoneNumber + ',' + "Email :" + email;
+	}
+
+}
