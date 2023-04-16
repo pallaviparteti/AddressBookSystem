@@ -115,6 +115,7 @@ public class AddressBookSystem extends Contacts {
 			}
 		}
 	}
+
 	public void searchContactsByCityOrState() {
 		System.out.println("Enter City or State to search contacts: ");
 		String cityOrState = scanner.nextLine();
@@ -134,6 +135,39 @@ public class AddressBookSystem extends Contacts {
 		}
 	}
 
+	public void viewPersonByCity() {
+		System.out.println("Enter City name to view persons: ");
+		String city = scanner.nextLine();
+		List<Contacts> matchingContacts = new ArrayList<>();
+		for (Contacts c : Contacts) {
+			if (c.getCity().equalsIgnoreCase(city)) {
+				matchingContacts.add(c);
+			}
+		}
+		if (matchingContacts.isEmpty()) {
+			System.out.println("No persons found in " + city);
+		} else {
+			System.out.println("Persons found in " + city + ":");
+			for (Contacts c : matchingContacts) {
+				System.out.println(c.getFirstName() + " " + c.getLastName());
+			}
+		}
+	}
+
+	public void viewContactsByState() {
+		System.out.println("Enter State to view contacts: ");
+		String state = scanner.nextLine();
+		boolean foundContacts = false;
+		for (Contacts c : Contacts) {
+			if (c.getState().equalsIgnoreCase(state)) {
+				System.out.println(c);
+				foundContacts = true;
+			}
+		}
+		if (!foundContacts) {
+			System.out.println("No contacts found in " + state);
+		}
+	}
 
 	public void displayContacts() {
 
