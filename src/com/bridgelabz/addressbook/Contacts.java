@@ -3,7 +3,6 @@ package com.bridgelabz.addressbook;
 import java.util.Comparator;
 import java.util.Objects;
 
-
 public class Contacts {
 	// Method to compare two Contacts objects by their first name
 	public static Comparator<Contacts> FirstNameComparator = new Comparator<Contacts>() {
