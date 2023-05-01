@@ -1,97 +1,157 @@
 package com.bridgelabz.addressbook;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class AddressBookMain {
-	public static void main(String[] args) {
+class AddressBookMain extends Contacts{
 
-		AddressBookSystem addressBook = new AddressBookSystem();
-		Scanner scanner = new Scanner(System.in);
+	private static Scanner in = new Scanner(System.in);
+	private static File file = new File("Addresses.txt");
+	static List<Contacts> people = new ArrayList<>();
 
-		while (true) {
-			System.out.println("Enter 1 to add Address Book");
-			System.out.println("Enter 2 to display Address Book");
-			System.out.println("Enter 3 to open Address Book");
-			System.out.println("Enter 4 to add contact");
-			System.out.println("Enter 5 to search Contacts By City Or State");
-			System.out.println("Enter 6 to search & view Contacts By City");
-			System.out.println("Enter 7 to search Contacts By State");
-			System.out.println("Enter 8 to search Contact Numbers in a City Or State");
-			System.out.println("Enter 9 to sort Contacts By Alphabetically");
-			System.out.println("Enter 10 to sort Contacts By City");
-			System.out.println("Enter 11 to sort Contacts By State");
-			System.out.println("Enter 12 to sort Contacts By Zip");
-			System.out.println("Enter 13 to display all contacts");
-			System.out.println("Enter 14 to edit a contact");
-			System.out.println("Enter 15 to delete a contact");
-			System.out.println("Enter 16 to exit Address Book");
+	AddressBookMain(String firstName, String lastName, String state, String zip, String phoneNumber,String email) {
+		super(firstName, lastName,state,zip, phoneNumber, email);
+	}
 
-			System.out.println("Enter 0 to exit");
-			int choice = scanner.nextInt();
-			scanner.nextLine();
+	public static void main(String[] args) throws IOException {
+		readPeopleFromFile();
+		showMainMenu();
+	}
 
+	private static void findPerson() throws IOException {
+		System.out.println("1. Find with FirstName");
+		System.out.println("2. Find with LastName");
+
+		String choice;
+		do {
+			choice = in.nextLine();
 			switch (choice) {
-			case 0:
-				System.out.println("Exiting Address Book");
-				System.exit(0);
-			case 1:
-				addressBook.addAddressBook();
+			case "1":
+				findByFirstName();
 				break;
-			case 2:
-				addressBook.displayAddressBooks();
+			case "2":
+				findByLastName();
 				break;
-			case 3:
-				addressBook.openAddressBook();
-				break;
-			case 4:
-				addressBook.addContacts();
-				break;
-			case 5:
-				addressBook.searchContactsByCityOrState();
-
-				break;
-			case 6:
-				addressBook.viewPersonByCity();
-				break;
-			case 7:
-				addressBook.viewContactsByState();
-				break;
-			case 8:
-				addressBook.searchContactNumbersByCityOrState();
-				break;
-			case 9:
-				addressBook.sortContactsByName();
-				break;
-			case 10:
-				addressBook.sortContactsByCity();
-				break;
-			case 11:
-				addressBook.sortContactsByState();
-				break;
-			case 12:
-				addressBook.sortContactsByZip();
-				break;
-			case 13:
-				addressBook.displayContacts();
-				break;
-			case 14:
-				System.out.println("Enter the first name of the contact to edit:");
-				String firstName = scanner.nextLine();
-				System.out.println("Enter the last name of the contact to edit:");
-				String lastName = scanner.nextLine();
-				addressBook.editContact(firstName, lastName);
-				break;
-			case 15:
-				System.out.println("Enter the first name of the contact to delete:");
-				String firstName1 = scanner.nextLine();
-				System.out.println("Enter the last name of the contact to delete:");
-				String lastName1 = scanner.nextLine();
-				addressBook.deleteContact(firstName1, lastName1);
-				break;
-			case 16:
-				System.exit(0);
 			default:
-				System.out.println(" Contact details not found. ");
+				System.out.print("Choose 1 or 2: ");
+			}
+		} while (!choice.equals("1") && !choice.equals("2"));
+		System.out.println();
+		showMainMenu();
+	}
+
+	private static void findByLastName() {
+		System.out.print("Enter surname: ");
+		String surnameToFind = in.nextLine();
+		int matches = 0;
+		for(Contacts person : people) {
+			if(person.getLastName().equals(surnameToFind)) {
+				System.out.println(person);
+				matches++;
 			}
 		}
+		if(matches<=0) {
+			System.out.println("There is no Person with this surname");
+		}
+	}
+
+	private static void findByFirstName() {
+		System.out.print("Enter name: ");
+		String nameToFind = in.nextLine();
+		int matches = 0;
+		for(Contacts person : people) {
+			if(person.getFirstName().equals(nameToFind)) {
+				System.out.println(person);
+				matches++;
+			}
+		}
+		if(matches<=0) {
+			System.out.println("There is no Person with this name ");
+		}
+	}
+
+	private static void addPerson() throws IOException {
+
+		System.out.println("Enter firstname: ");
+		String firstName = in.nextLine();
+		System.out.println("Enter Lastame: ");
+		String lastName = in.nextLine();
+		System.out.println("Enter phone number: ");
+		String phoneNumber = in.nextLine();
+		System.out.println("Enter email: ");
+		String email = in.nextLine();
+		System.out.println("Enter state: ");
+		String state = in.nextLine();
+		System.out.println("Enter zip: ");
+		String zip = in.nextLine();
+
+		Contacts person = new Contacts(firstName, lastName, phoneNumber, email, zip,state);
+		addToFile(person);
+		people.add(person);
+		System.out.println("Added Person number: "  + person);
+		System.out.println();
+		showMainMenu();
+	}
+
+	private static void addToFile(Contacts person) {
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+			writer.write(person.getFirstName()+"\r\n" + person.getLastName() + "\r\n" + person.getPhoneNumber() + "\r\n" + person.getEmail() +
+					"\r\n" + person.getState() + "\r\n\r\n" + person.getEmail() + "\r\n\r\n");
+		} catch(IOException e) {
+			System.out.println(e);
+		}
+	}
+
+	private static boolean readPeopleFromFile() throws IOException {
+		try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			String FirstName = null;
+			while((FirstName = reader.readLine()) != null) {
+				Contacts person = new Contacts(FirstName + reader.readLine(), reader.readLine(), reader.readLine(), reader.readLine(), reader.readLine(),reader.readLine());
+				people.add(person);        //adds Person to the list
+				reader.readLine();
+			}
+			return true;
+		}
+		catch ( IOException e) {
+			System.out.println(e);
+		}
+		return false;
+	}
+
+	private static void showMainMenu() throws IOException {
+		System.out.println("1. Add Person");
+		System.out.println("2. Find Person");
+		System.out.println("3. Show all contacts");
+		System.out.println("4. Close program");
+
+		String choice;
+		do {
+			choice = in.nextLine();
+			switch (choice) {
+			case "1":
+				addPerson();
+				break;
+			case "2":
+				findPerson();
+				break;
+			case "3":
+				System.out.println(people);
+				System.out.println();
+				showMainMenu();
+				break;
+			case "4":
+				System.exit(0);
+				break;
+			default:
+				System.out.println("Enter numer from 1 to 4");
+			}
+		}while(!choice.equals("4"));
 	}
 }
